@@ -207,7 +207,6 @@
             width: 52px;        /* Matches Profile Page */
             height: 52px;       /* Matches Profile Page */
             border-radius: 50%;
-            /* White Border & Transparent Background (Dark Theme) */
             border: 2px solid rgba(255, 255, 255, 0.3); 
             background-color: transparent; 
             color: var(--col-white);
@@ -448,7 +447,7 @@
 
 
         // --- 2. CONFIGURATION (REPLACE THESE KEYS!) ---
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL_HERE';
+        const SUPABASE_URL = 'https://mkonvzqmdxqeqqcqhmvc.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rb252enFtZHhxZXFxY3FobXZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1ODI1MzksImV4cCI6MjA4MDE1ODUzOX0.Vo1-zOQMYfFIO4ka_7lk0XSjyxGlz6IlHFND0FvWG4o';
         
         let client;
@@ -528,14 +527,17 @@
                 chatWindow.scrollTop = chatWindow.scrollHeight;
             }
 
+            // --- UPDATED CHAT CONNECTION TO RENDER BACKEND ---
             chatForm.addEventListener("submit", async (e) => {
                 e.preventDefault();
                 const txt = msgInput.value.trim();
                 if (!txt) return;
 
+                // 1. Display User Message
                 appendMessage(txt, 'user');
                 msgInput.value = "";
 
+                // Save User Message to Supabase
                 if (activeUser && client) {
                     await client.from('chat_messages').insert({
                         user_id: activeUser,
@@ -544,10 +546,33 @@
                     });
                 }
 
-                setTimeout(async () => {
-                    const botReply = "I am a demo bot.";
-                    appendMessage(botReply, 'bot');
+                // 2. Show Thinking Bubble
+                const loadingBubble = document.createElement("div");
+                loadingBubble.className = "message bot";
+                loadingBubble.innerText = "Thinking..."; 
+                loadingBubble.id = "loading-bubble";
+                chatWindow.appendChild(loadingBubble);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+
+                try {
+                    // 3. SEND TO PYTHON BACKEND
+                    // REPLACE THIS URL with your actual Render URL (e.g., https://my-app.onrender.com/chat)
+                    const backendUrl = "https://imp25.onrender.com"; 
                     
+                    const response = await fetch(backendUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: txt })
+                    });
+
+                    const data = await response.json();
+                    const botReply = data.response; // Response from Gemini
+
+                    // 4. Update UI with Answer
+                    chatWindow.removeChild(loadingBubble);
+                    appendMessage(botReply, 'bot');
+
+                    // Save Bot Message to Supabase
                     if (activeUser && client) {
                         await client.from('chat_messages').insert({
                             user_id: activeUser,
@@ -555,7 +580,12 @@
                             message: botReply
                         });
                     }
-                }, 1000);
+
+                } catch (error) {
+                    console.error("Chat Error:", error);
+                    const loading = document.getElementById("loading-bubble");
+                    if(loading) loading.innerText = "Error connecting to AI. Check your internet or backend URL.";
+                }
             });
         });
     </script>
