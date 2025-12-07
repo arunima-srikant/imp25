@@ -21,7 +21,7 @@ if not api_key:
 
 genai.configure(api_key=api_key)
 
-# We use the standard 1.5 Flash model which never gives 404s
+# We use the standard 1.5 Flash model which never gives 404s on this library
 MODEL_NAME = 'gemini-1.5-flash'
 
 # --- 2. DATA LOADING FUNCTIONS ---
