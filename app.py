@@ -22,7 +22,7 @@ try:
 except Exception as e:
     print(f"Error initializing Gemini Client: {e}")
 
-MODEL_NAME = 'gemini-1.5-flash'
+MODEL_NAME = 'gemini-2.0-flash'
 
 # --- 2. DATA LOADING FUNCTIONS ---
 
