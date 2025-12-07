@@ -1,0 +1,147 @@
+{
+    "survey_summary": {
+        "demographics": {
+            "Age Category": {
+                "45 and above": 39.5,
+                "18 to 24": 36.7,
+                "25 to 34": 12.2,
+                "35 to 44": 11.600000000000001
+            },
+            "Gender Distribution": {
+                "Female": 62.1,
+                "Male": 37.6,
+                "Non-binary": 0.3
+            },
+            "Occupation Distribution": {
+                "Student": 27.3,
+                "Services": 22.3,
+                "Business": 18.5,
+                "Academia": 8.200000000000001,
+                "Homemaker": 7.8,
+                "Self Employed": 5.0,
+                "IT": 4.1000000000000005,
+                "Retired": 2.8000000000000003,
+                "Medical": 2.8000000000000003,
+                "Other": 1.3
+            },
+            "Location Distribution": {
+                "Pune": 21.9,
+                "Mumbai": 21.6,
+                "Bengaluru": 12.9,
+                "Delhi": 6.0,
+                "Chennai": 5.6000000000000005,
+                "Gurugram": 5.6000000000000005,
+                "USA": 4.3999999999999995,
+                "Thane": 4.1000000000000005,
+                "New Delhi": 3.8,
+                "Lucknow": 2.1999999999999997,
+                "Hyderabad": 1.9,
+                "Noida": 1.3,
+                "Coimbatore": 0.8999999999999999,
+                "Kolhapur": 0.6,
+                "Vadodara": 0.6,
+                "Singapore": 0.6,
+                "Kolkata": 0.6,
+                "Sonipat": 0.3,
+                "Madikeri": 0.3,
+                "Germany": 0.3,
+                "Ahilyanagar": 0.3,
+                "Meerut": 0.3,
+                "Dubai": 0.3,
+                "Nashik": 0.3,
+                "Ahmedabad": 0.3,
+                "Indore": 0.3,
+                "Badlapur": 0.3,
+                "Thailand": 0.3,
+                "Mysore": 0.3,
+                "Australia": 0.3,
+                "Switzerland": 0.3,
+                "Ambarnath": 0.3,
+                "London": 0.3,
+                "Kochi": 0.3
+            }
+        },
+        "social_media_usage": {
+            "Social network? Instagram": 31.72,
+            "Social Network? LinkedIn": 21.28,
+            "Social Network? Facebook": 12.79,
+            "Social Network? X (formerly Twitter)": 6.14,
+            "Social Network? YouTube": 28.07
+        },
+        "discovery_channels": {
+            "WoM Discovery": 35.37,
+            "Google Maps Discovery": 8.91,
+            "Google Reviews": 13.87,
+            "Meta Ads": 4.07,
+            "Promotional Discounts on Food Delivery Apps": 7.12,
+            "Social Media": 30.66,
+            "Social Media Influencers": 0.0
+        },
+        "content_preferences": {
+            "Content? Food content": 34.63,
+            "Content? Influencer Promotions Content": 3.76,
+            "Content? Event Announcements": 10.29,
+            "Content? Collaborations": 5.9,
+            "Content? Offers/Discounts": 16.94,
+            "Content? Ambience": 28.48
+        },
+        "ratings": {
+            "What do you look for in a cafe? Rate the importance of each factor above on a scale of 1 to 5. (1 = Not Important, 5 = Very Important) [Quality of Food]": {
+                "mean": 4.463949843260188,
+                "median": 5.0,
+                "std": 0.8639084493145933
+            },
+            "What do you look for in a cafe? Rate the importance of each factor above on a scale of 1 to 5. (1 = Not Important, 5 = Very Important) [Ambience]": {
+                "mean": 4.09717868338558,
+                "median": 4.0,
+                "std": 0.9383302794085167
+            },
+            "What do you look for in a cafe? Rate the importance of each factor above on a scale of 1 to 5. (1 = Not Important, 5 = Very Important) [Work-friendly]": {
+                "mean": 3.1316614420062696,
+                "median": 3.0,
+                "std": 1.2291918644926922
+            },
+            "What do you look for in a cafe? Rate the importance of each factor above on a scale of 1 to 5. (1 = Not Important, 5 = Very Important) [Location]": {
+                "mean": 3.8369905956112853,
+                "median": 4.0,
+                "std": 0.9865821679541527
+            },
+            "What do you look for in a cafe? Rate the importance of each factor above on a scale of 1 to 5. (1 = Not Important, 5 = Very Important) [Access]": {
+                "mean": 3.8401253918495297,
+                "median": 4.0,
+                "std": 1.0169110877200962
+            },
+            "What do you look for in a cafe? Rate the importance of each factor above on a scale of 1 to 5. (1 = Not Important, 5 = Very Important) [Travel Convenience]": {
+                "mean": 3.9623824451410656,
+                "median": 4.0,
+                "std": 1.0024319317559998
+            }
+        },
+        "cafe_types": {
+            "Type of Cafe - Book Cafe": 13.5,
+            "Type of Cafe - Scandinavian Cafe": 10.61,
+            "Type of Cafe - Desi Cafe": 11.17,
+            "Type of Cafe - Industrial Cafe": 6.67,
+            "Type of Cafe - Boho Cafe": 13.02,
+            "Type of Cafe - Artistic Cafe": 16.64,
+            "Type of Cafe - Vintage Cafe": 12.94,
+            "Type of Cafe - Rustic Cafe": 15.43
+        },
+        "brand_recall": {
+            "Recall? Signages": 16.68,
+            "Recall? Menu": 25.68,
+            "Recall? Coasters": 7.89,
+            "Recall? Logo": 15.57,
+            "Recall? Staff Uniform": 5.46,
+            "Recall? Tagline": 5.46,
+            "Recall? Cafe Colour Palette": 20.32,
+            "Recall? Mascot": 2.63,
+            "Recall? Other": 0.3
+        }
+    },
+    "free_text_insights": {
+        "Free Text Summary: What kind of content woul...": "No data / column not found.",
+        "Free Text Summary: What elements of the bran...": "No data / column not found.",
+        "Free Text Summary: Is there anything else yo...": "No data / column not found."
+    }
+}
