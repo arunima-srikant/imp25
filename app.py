@@ -17,12 +17,12 @@ CORS(app) # Enable Cross-Origin requests so your GitHub Page can talk to this
 # Initialize Gemini Client
 # Ensure GOOGLE_API_KEY is set in your .env or Render Environment Variables
 try:
-    client = genai.Client(api_key=os.environ.get("GOOGLE_API_KEY"))
+    client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
     print("Gemini Client initialized.")
 except Exception as e:
     print(f"Error initializing Gemini Client: {e}")
 
-MODEL_NAME = 'gemini-2.0-flash'
+MODEL_NAME = 'gemini-1.5-flash'
 
 # --- 2. DATA LOADING FUNCTIONS ---
 
