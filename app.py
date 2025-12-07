@@ -4,24 +4,24 @@ import glob
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
-from google import genai
-from google.genai import types
+import google.generativeai as genai  # <-- Using the stable library
 
 # --- 1. SETUP & CONFIGURATION ---
 
-load_dotenv() # Loads .env locally (Render will use Environment Variables)
+load_dotenv() 
 
 app = Flask(__name__)
-CORS(app) # Enable Cross-Origin requests so your GitHub Page can talk to this
+CORS(app) 
 
-# Initialize Gemini Client
-# Ensure GOOGLE_API_KEY is set in your .env or Render Environment Variables
-try:
-    client = genai.Client(api_key=os.environ.get("GOOGLE_API_KEY")) 
-    print("Gemini Client initialized.") 
-except Exception as e: 
-    print(f"Error initializing Gemini Client: {e}") 
+# Configure Gemini with the Stable Library
+# Ensure GOOGLE_API_KEY is set in Render
+api_key = os.environ.get("GOOGLE_API_KEY")
+if not api_key:
+    print("WARNING: GOOGLE_API_KEY not found!")
 
+genai.configure(api_key=api_key)
+
+# We use the standard 1.5 Flash model which never gives 404s
 MODEL_NAME = 'gemini-1.5-flash'
 
 # --- 2. DATA LOADING FUNCTIONS ---
@@ -65,17 +65,13 @@ def load_survey_json(file_path):
         return ""
 
 def load_context():
-    """
-    Loads all JSON context on server startup.
-    """
-    directory = os.getcwd() # Looks in the current folder (Root of your repo)
+    directory = os.getcwd()
     json_paths = sorted(glob.glob(os.path.join(directory, "*.json")))
     parts = []
     
     print(f"Scanning directory: {directory}")
     
     for path in json_paths:
-        # Skip package files or non-data files if any exist
         if "package" in path or "lock" in path: 
             continue
 
@@ -92,34 +88,25 @@ def load_context():
     print(f"Loaded {len(parts)} JSON context blocks.")
     return "\n\n".join(parts)
 
-# Load context ONCE when app starts
 FULL_INTERVIEW_CONTEXT = load_context()
 
 SYSTEM_INSTRUCTION = f"""
-You are an analytical assistant, built to answer questions that cafe entreprenuers have when starting a new cafe. 
-You DO NOT just repeat or summarize the context provided.
-
+You are an analytical assistant.
 Your goals:
-1. Use the interview transcript contexts as background knowledge.
-2. Use the survey analytics as a customer perspective to cafe-going.
-3. Use both transcripts and survey to give holistic answers.
-4. Think beyond explicit text.
-5. Infer patterns, motives, insights, and deeper meanings.
-6. Provide thoughtful, evaluative, and analytical answers.
-7. If the user asks about something subjective (e.g., fonts, design decisions), use the context to think of an answer.
+1. Use the provided context as background knowledge.
+2. Infer patterns, motives, insights, and deeper meanings.
+3. Be concise and analytical.
 
-Be concise, analytical, and insight-driven.
-
---- INTERVIEW CONTEXT START ---
+--- CONTEXT START ---
 {FULL_INTERVIEW_CONTEXT}
---- INTERVIEW CONTEXT END ---
+--- CONTEXT END ---
 """
 
 # --- 3. THE WEB ROUTE ---
 
 @app.route('/', methods=['GET'])
 def home():
-    return "Gemini RAG Server is Running!"
+    return "Gemini RAG Server is Running (Stable Version)!"
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -130,16 +117,18 @@ def chat():
         if not user_query:
             return jsonify({"error": "No message provided"}), 400
 
-        # Construct the content for Gemini
-        # We pass the System Instruction + Context + User Query
+        # Initialize Model (Old Library Syntax)
+        model = genai.GenerativeModel(
+            model_name=MODEL_NAME,
+            system_instruction=SYSTEM_INSTRUCTION
+        )
         
-        response = client.models.generate_content(
-            model=MODEL_NAME,
-            config=types.GenerateContentConfig(
-                system_instruction=SYSTEM_INSTRUCTION,
+        # Generate Response
+        response = model.generate_content(
+            user_query,
+            generation_config=genai.types.GenerationConfig(
                 temperature=0.2
-            ),
-            contents=[user_query]
+            )
         )
 
         return jsonify({"response": response.text})
@@ -149,5 +138,4 @@ def chat():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    # Local testing
     app.run(debug=True, port=5000)
