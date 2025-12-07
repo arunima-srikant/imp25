@@ -409,41 +409,52 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // --- 1. RUN PRELOADER IMMEDIATELY (FAIL-SAFE) ---
-        // We run this OUTSIDE the DOMContentLoaded just in case
+        // --- 1. SAFE PRELOADER LOGIC ---
         const preloader = document.getElementById('preloader');
         const percentText = document.getElementById('percent-text');
         const liquid = document.getElementById('liquid');
 
+        function removePreloader() {
+            if (!preloader) return;
+            // Fade out
+            preloader.style.opacity = '0';
+            setTimeout(() => {
+                preloader.style.display = 'none';
+                // Mark as shown so it doesn't appear on refresh
+                sessionStorage.setItem('byteSizeIntroShown', 'true');
+            }, 500);
+        }
+
         function startPreloader() {
+            // If already shown in this session, hide immediately
             if (sessionStorage.getItem('byteSizeIntroShown')) {
                 if(preloader) preloader.style.display = 'none';
                 return;
             }
 
             let loadCount = 0;
+            // Run the counter based on time, NOT file loading
             const interval = setInterval(() => {
                 loadCount++;
-                if (percentText && liquid) {
-                    percentText.innerText = loadCount + '%';
-                    liquid.style.height = loadCount + '%';
-                }
-                if (loadCount === 100) {
+                if (percentText) percentText.innerText = loadCount + '%';
+                if (liquid) liquid.style.height = loadCount + '%';
+
+                if (loadCount >= 100) {
                     clearInterval(interval);
-                    setTimeout(() => {
-                        if(preloader) preloader.style.opacity = '0';
-                        setTimeout(() => {
-                            if(preloader) preloader.style.display = 'none';
-                            sessionStorage.setItem('byteSizeIntroShown', 'true');
-                        }, 500);
-                    }, 500);
+                    removePreloader();
                 }
-            }, 20);
+            }, 25); // This ensures it finishes in exactly 2.5 seconds
         }
-        
-        // Start animation immediately if elements exist, otherwise wait for load
+
+        // Start immediately
         if(preloader) startPreloader();
-        else window.addEventListener('load', startPreloader);
+
+        // FALLBACK: Force remove after 4 seconds if anything gets stuck
+        setTimeout(() => {
+            if(preloader && preloader.style.display !== 'none') {
+                removePreloader();
+            }
+        }, 4000);
 
 
         // --- 2. CONFIGURATION (REPLACE THESE KEYS!) ---
@@ -481,4 +492,113 @@
                 if (data && data.length > 0) {
                     chatWindow.innerHTML = ''; 
                     data.forEach(msg => {
-                      
+                        appendMessage(msg.message, msg.sender);
+                    });
+                }
+            }
+            
+            loadChatHistory();
+
+            // --- SCROLL EFFECTS ---
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                const windowHeight = window.innerHeight;
+                bg.style.transform = `scale(${1 + (scrollY * 0.0003)})`;
+                branding.style.opacity = Math.max(0, 1 - (scrollY / 400));
+                scrollArrow.style.opacity = scrollY > 50 ? 0 : 0.8;
+                let introOpacity = (scrollY - 400) / 400; 
+                introOpacity = Math.min(Math.max(introOpacity, 0), 1);
+                introText.style.opacity = introOpacity;
+                if(introOpacity > 0) { introText.style.transform = `translate(-50%, calc(-50% + ${Math.max(0, 50 - ((scrollY - 400) / 8))}px))`; }
+                overlay.style.opacity = Math.min(scrollY / (windowHeight * 1.2), 1);
+                if (scrollY > 50) header.classList.add('scrolled'); else header.classList.remove('scrolled');
+            });
+
+            // --- CHATBOT LOGIC ---
+            const fab = document.getElementById("fab-trigger");
+            const chatWidget = document.getElementById("chat-widget");
+            const closeChat = document.getElementById("close-chat");
+            const expandChat = document.getElementById("expand-chat");
+            const chatForm = document.getElementById("chat-form");
+            const msgInput = document.getElementById("message-input");
+
+            fab.addEventListener("click", () => {
+                const isHidden = chatWidget.style.display === "none" || chatWidget.style.display === "";
+                chatWidget.style.display = isHidden ? "flex" : "none";
+                if (isHidden) msgInput.focus();
+            });
+            closeChat.addEventListener("click", () => chatWidget.style.display = "none");
+            expandChat.addEventListener("click", () => { chatWidget.classList.toggle('expanded'); });
+
+            function appendMessage(text, sender) {
+                const d = document.createElement("div"); 
+                d.className = `message ${sender}`; 
+                d.innerText = text;
+                chatWindow.appendChild(d);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+
+            // --- UPDATED CHAT CONNECTION TO RENDER BACKEND ---
+            chatForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const txt = msgInput.value.trim();
+                if (!txt) return;
+
+                // 1. Display User Message
+                appendMessage(txt, 'user');
+                msgInput.value = "";
+
+                // Save User Message to Supabase
+                if (activeUser && client) {
+                    await client.from('chat_messages').insert({
+                        user_id: activeUser,
+                        sender: 'user',
+                        message: txt
+                    });
+                }
+
+                // 2. Show Thinking Bubble
+                const loadingBubble = document.createElement("div");
+                loadingBubble.className = "message bot";
+                loadingBubble.innerText = "Thinking..."; 
+                loadingBubble.id = "loading-bubble";
+                chatWindow.appendChild(loadingBubble);
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+
+                try {
+                    // 3. SEND TO PYTHON BACKEND
+                    // REPLACE THIS URL with your actual Render URL (e.g., https://my-app.onrender.com/chat)
+                    const backendUrl = "https://imp25.onrender.com/chat"; 
+                    
+                    const response = await fetch(backendUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: txt })
+                    });
+
+                    const data = await response.json();
+                    const botReply = data.response; // Response from Gemini
+
+                    // 4. Update UI with Answer
+                    chatWindow.removeChild(loadingBubble);
+                    appendMessage(botReply, 'bot');
+
+                    // Save Bot Message to Supabase
+                    if (activeUser && client) {
+                        await client.from('chat_messages').insert({
+                            user_id: activeUser,
+                            sender: 'bot',
+                            message: botReply
+                        });
+                    }
+
+                } catch (error) {
+                    console.error("Chat Error:", error);
+                    const loading = document.getElementById("loading-bubble");
+                    if(loading) loading.innerText = "Error connecting to AI. Check your internet or backend URL.";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
