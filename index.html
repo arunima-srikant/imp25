@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ByteSize - Data Driven Platform</title>
     
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@300;400;700;900&display=swap" rel="stylesheet">
@@ -457,7 +459,7 @@
         }, 4000);
 
 
-        // --- 2. CONFIGURATION (REPLACE THESE KEYS!) ---
+        // --- 2. CONFIGURATION ---
         const SUPABASE_URL = 'https://mkonvzqmdxqeqqcqhmvc.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rb252enFtZHhxZXFxY3FobXZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ1ODI1MzksImV4cCI6MjA4MDE1ODUzOX0.Vo1-zOQMYfFIO4ka_7lk0XSjyxGlz6IlHFND0FvWG4o';
         
@@ -538,7 +540,7 @@
                 chatWindow.scrollTop = chatWindow.scrollHeight;
             }
 
-            // --- UPDATED CHAT CONNECTION TO RENDER BACKEND ---
+            // --- UPDATED CHAT CONNECTION TO RENDER BACKEND (FIXED ERROR HANDLING) ---
             chatForm.addEventListener("submit", async (e) => {
                 e.preventDefault();
                 const txt = msgInput.value.trim();
@@ -567,7 +569,7 @@
 
                 try {
                     // 3. SEND TO PYTHON BACKEND
-                    // REPLACE THIS URL with your actual Render URL (e.g., https://my-app.onrender.com/chat)
+                    // Ensure this URL ends with /chat and matches your Render URL
                     const backendUrl = "https://imp25.onrender.com/chat"; 
                     
                     const response = await fetch(backendUrl, {
@@ -577,9 +579,20 @@
                     });
 
                     const data = await response.json();
-                    const botReply = data.response; // Response from Gemini
+                    
+                    // --- ERROR HANDLING LOGIC ---
+                    // If the backend sends an error, show it. If it sends a response, show that.
+                    let botReply;
+                    if (data.error) {
+                        console.error("Backend Error:", data.error);
+                        botReply = "Error: " + data.error; 
+                    } else if (data.response) {
+                        botReply = data.response;
+                    } else {
+                        botReply = "Received empty response from server.";
+                    }
 
-                    // 4. Update UI with Answer
+                    // 4. Update UI with Answer or Error
                     chatWindow.removeChild(loadingBubble);
                     appendMessage(botReply, 'bot');
 
@@ -594,4 +607,12 @@
 
                 } catch (error) {
                     console.error("Chat Error:", error);
-                    const loading = document.g
+                    const loading = document.getElementById("loading-bubble");
+                    if(loading) chatWindow.removeChild(loading);
+                    appendMessage("Connection failed. Please check console for details.", "bot");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
