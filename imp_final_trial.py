@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 # 1. Setup Flask and Environment
 app = Flask(__name__)
+CORS(app)
 load_dotenv()
 
 # Initialize Client
