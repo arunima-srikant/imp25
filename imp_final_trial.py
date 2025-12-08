@@ -2,6 +2,7 @@ import os
 import json
 import glob
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from google import genai
 from google.genai.types import Content, GenerateContentConfig, Part
 from dotenv import load_dotenv
