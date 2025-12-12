@@ -34,7 +34,7 @@
             overflow-x: hidden;
         }
 
-        /* --- HEADER (LIGHT THEME) --- */
+        /* --- HEADER --- */
         header {
             position: fixed; top: 0; width: 100%; padding: 20px 0; z-index: 1000;
             background-color: var(--col-bg-crema);
@@ -58,13 +58,11 @@
             color: var(--col-primary-brown) !important;
         }
 
-        /* --- UPDATED PROFILE BUTTON (LARGER) --- */
         .profile-icon-btn {
             display: flex; align-items: center; justify-content: center;
-            width: 52px;        /* Increased size */
-            height: 52px;       /* Increased size */
+            width: 52px; height: 52px;
             border-radius: 50%;
-            border: 2px solid rgba(62, 43, 38, 0.3); /* Thicker border */
+            border: 2px solid rgba(62, 43, 38, 0.3);
             color: var(--col-primary-brown);
             transition: all 0.2s ease;
             box-sizing: border-box;
@@ -74,18 +72,14 @@
             color: var(--col-white) !important;
             transform: scale(1.05);
         }
-        .profile-icon-btn svg { 
-            width: 28px;        /* Larger Icon */
-            height: 28px;       /* Larger Icon */
-            stroke-width: 2;    /* Bolder Lines */
-        }
+        .profile-icon-btn svg { width: 28px; height: 28px; stroke-width: 2; }
 
 
         /* --- SCROLL TRACK & CONTENT --- */
-        .scroll-track { height: 350vh; position: relative; }
+        .scroll-track { height: 550vh; position: relative; }
         .sticky-stage { position: sticky; top: 0; height: 100vh; width: 100%; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-        .team-cluster { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100vh; pointer-events: none; }
+        .team-cluster { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100vh; pointer-events: none; transition: opacity 0.5s; }
         .member-circle { position: absolute; width: 150px; height: 150px; border-radius: 50%; background-color: #ddd; background-size: cover; background-position: center; background-repeat: no-repeat; box-shadow: 0 10px 20px rgba(62, 43, 38, 0.25); border: 4px solid var(--col-white); transition: transform 0.1s linear; top: 50%; left: 50%; margin-top: -75px; margin-left: -75px; pointer-events: auto; cursor: pointer; z-index: 10; }
         .member-circle:hover { z-index: 100; }
 
@@ -96,18 +90,49 @@
         .member-info p { font-family: var(--font-body); font-size: 0.85rem; color: var(--col-text-charcoal); margin: 0; line-height: 1.4; }
         .member-info span.label { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-top: 8px; margin-bottom: 2px; }
 
-        .about-content-card { position: absolute; bottom: -100vh; width: 90%; max-width: 900px; background-color: var(--col-white); border-radius: 24px; padding: 0; box-shadow: 0 -20px 60px rgba(62, 43, 38, 0.15); overflow: hidden; display: flex; flex-direction: column; opacity: 0; transform: scale(0.95); transition: opacity 0.5s, transform 0.5s; z-index: 50; }
-        .group-photo-placeholder { width: 100%; height: 400px; background-color: #E0E0E0; background-size: cover; background-position: center; background-repeat: no-repeat; border-bottom: 1px solid #eee; }
+        /* --- CARDS --- */
+        .content-card { position: absolute; bottom: -100vh; width: 90%; max-width: 900px; background-color: var(--col-white); border-radius: 24px; box-shadow: 0 -20px 60px rgba(62, 43, 38, 0.15); overflow: hidden; display: flex; flex-direction: column; opacity: 0; transform: scale(0.95); transition: opacity 0.5s, transform 0.5s; z-index: 50; }
+        
+        .group-photo-placeholder { width: 100%; height: 400px; background-color: #E0E0E0; background-size: cover; background-position: center; border-bottom: 1px solid #eee; }
         .text-content { padding: 50px 60px; text-align: center; }
         .text-content h1 { font-family: var(--font-heading); font-size: 3rem; color: var(--col-primary-brown); margin-bottom: 24px; }
         .text-content p { font-size: 1.1rem; color: var(--col-text-charcoal); line-height: 1.8; max-width: 700px; margin: 0 auto; }
+
+        /* --- NEW ADVISOR STYLES --- */
+        .advisor-list { padding: 40px 60px; display: flex; flex-direction: column; gap: 40px; }
+        
+        .advisor-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 40px; 
+            text-align: left; /* Text description on the side */
+        }
+        
+        /* The Advisor Circle - Styled "like ours" */
+        .advisor-circle {
+            width: 140px; 
+            height: 140px; 
+            flex-shrink: 0; /* Prevents squishing */
+            border-radius: 50%;
+            background-color: #C7BBAE; 
+            background-size: cover; 
+            background-position: center;
+            border: 4px solid var(--col-bg-crema); /* Matches background to look like cutout */
+            box-shadow: 0 8px 20px rgba(62, 43, 38, 0.15);
+        }
+
+        .advisor-details h2 { font-family: var(--font-heading); font-size: 1.5rem; color: var(--col-primary-brown); margin-bottom: 8px; }
+        .advisor-details span { display: block; font-weight: 600; color: var(--col-accent-berry); margin-bottom: 12px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .advisor-details p { font-size: 1rem; color: var(--col-text-charcoal); line-height: 1.6; max-width: 100%; margin: 0; }
+
         .scroll-hint { position: absolute; bottom: 40px; text-align: center; width: 100%; color: var(--col-primary-brown); opacity: 0.6; animation: float 2s infinite; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
         @media (max-width: 768px) {
             .team-cluster { transform: translate(-50%, -50%) scale(0.5); }
-            .text-content { padding: 30px; }
+            .text-content, .advisor-list { padding: 30px; }
             .text-content h1 { font-size: 2rem; }
+            .advisor-item { flex-direction: column; text-align: center; gap: 20px; }
             .member-info { display: none; }
         }
     </style>
@@ -124,8 +149,8 @@
                 <div class="nav-links">
                     <a href="index.html">Home</a>
                     <a href="#" class="nav-active">About Us</a>
-                    <a href="#">Data Insights</a>
-                    <a href="#">Simulation</a>
+                    <a href="https://public.tableau.com/views/imp_cleaned/Story1?:language=en-US&publish=yes&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link">Data Insights</a>
+                    <a href="https://www.figma.com/proto/12D46h2ly13xr3qq4EfFZB/IMP-Final?page-id=0%3A1&node-id=98-9&viewport=21%2C186%2C0.04&t=flMaSqxzV5m7bVow-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=98%3A9">Simulation</a>
                     
                     <a href="profile.html" class="profile-icon-btn" title="My Cafe Profile">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -150,11 +175,45 @@
                 <div class="member-circle" id="m6" style="background-image: url('arunima.jpg');"><div class="member-info"><h3>Arunima Srikant</h3><span class="label">Major</span><p>Data Science and Economics</p></div></div>
             </div>
 
-            <div class="about-content-card" id="about-card">
+            <div class="content-card" id="about-card">
                 <div class="group-photo-placeholder" style="background-image: url('group.jpeg');"></div>
                 <div class="text-content">
                     <h1>About Us</h1>
-                    <p>We are a passionate group of six innovators, blending expertise in data science, design, and business strategy. Our mission is to empower cafe owners with actionable insights, turning raw data into the secret ingredient for success.</p>
+                    <p>We’re a bunch of fourth-year undergraduate students who have built an output to help café entrepreneurs elevate their presence, and thrive across both physical and digital spaces. Afterall, every person deserves to tell their story!
+                        Think of this portal as a cosy café you can step into anytime. Inside, you’ll find a visual brand book designed as an interactive café simulation. From the menu design to where your logo will best garner attention, you can hover over every branding collateral to visualise and understand how to navigate marketing decisions. It’s simple, visually engaging, and fun to explore.
+                        And because every café owner deserves a friendly advisor, we’ve added a chatbot that speaks your language. It’s backed by research but speaks in practical, easy-to-apply advice helping you untangle marketing questions without the overwhelm.
+                        Whether you’re opening your first cafe or looking to rebrand, ByteSize is here to help you fuel your creativity, sharpen your vision and curate a brand that grows with you. 
+                    </p>
+                </div>
+            </div>
+
+            <div class="content-card" id="advisor-card">
+                <div class="text-content" style="padding-bottom: 0;">
+                    <h1>Our Advisors</h1>
+                </div>
+                
+                <div class="advisor-list">
+                    <div class="advisor-item">
+                        <div class="advisor-circle" style="background-image: url('shamit.jpg');"></div>
+                        <div class="advisor-details">
+                            <h2>Professor Shamit Srivastav 
+                            </h2>
+                            <span>Associate Professor of Practice – Design at FLAME University, Head of the Design Innovation Lab. </span>
+                            <p>Pursued a Master’s in Design from IISc Bangalore and ongoing doctoral research in Design Entrepreneurship at IIT Delhi. He has extensive industry experience in product design, strategy, and innovation across major OEMs. His academic and research interests focus on design management, service design, and design entrepreneurship in education.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="advisor-item">
+                        <div class="advisor-circle" style="background-image: url('sandeep.jpeg');"></div>
+                        <div class="advisor-details">
+                            <h2>Professor Sandeep Khanna 
+                            </h2>
+                            <span>Assistant Professor of Computer Science at FLAME University</span>
+                            <p>Pursued a Master’s in Computer Engineering and a submitted doctoral thesis in Computer Science and Engineering at IIT Jodhpur. He brings strong academic and training experience in machine learning, deep learning, and computer science education, alongside prior industry experience as a software developer. His research interests include computer vision, document image analysis, incremental and machine unlearning, social network analysis, and generative AI, with publications in leading journals and conferences.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -166,7 +225,10 @@
         document.addEventListener("DOMContentLoaded", () => {
             const members = [ document.getElementById('m1'), document.getElementById('m2'), document.getElementById('m3'), document.getElementById('m4'), document.getElementById('m5'), document.getElementById('m6') ];
             const aboutCard = document.getElementById('about-card');
+            const advisorCard = document.getElementById('advisor-card');
+            const teamCluster = document.querySelector('.team-cluster');
             const scrollHint = document.getElementById('scroll-hint');
+            
             const startPos = [ { x: -480, y: 250 }, { x: -280, y: 50 }, { x: -90,  y: -120 }, { x: 90,   y: -120 }, { x: 280,  y: 50 }, { x: 480,  y: 250 } ];
             const endPos = [ { x: 0, y: -110 }, { x: 110, y: -50 }, { x: 110, y: 70 }, { x: 0, y: 130 }, { x: -110, y: 70 }, { x: -110, y: -50 } ];
 
@@ -175,7 +237,9 @@
                 const windowHeight = window.innerHeight;
                 const trackHeight = document.querySelector('.scroll-track').offsetHeight - windowHeight;
                 const progress = Math.min(scrollY / trackHeight, 1);
-                let clusterProgress = Math.min(progress / 0.6, 1);
+                
+                // PHASE 1: Bubbles assemble (0% to 30% of scroll)
+                let clusterProgress = Math.min(progress / 0.3, 1);
                 
                 members.forEach((member, index) => {
                     const start = startPos[index]; const end = endPos[index];
@@ -184,19 +248,47 @@
                     member.style.transform = `translate(${currentX}px, ${currentY}px)`;
                 });
 
-                if (progress > 0.6) {
-                    scrollHint.style.opacity = 0;
-                    let revealProgress = Math.min((progress - 0.6) / 0.3, 1);
+                // Scroll Hint Opacity
+                if (progress > 0.1) {
+                    scrollHint.style.opacity = Math.max(0, 1 - (progress - 0.1) * 5);
+                } else {
+                    scrollHint.style.opacity = 0.6;
+                }
+
+                // PHASE 2: About Card Logic (Enters at 30%, Exits at 60%)
+                if (progress > 0.3 && progress <= 0.65) {
+                    let revealProgress = Math.min((progress - 0.3) / 0.15, 1); 
                     const yOffset = (1 - revealProgress) * 100; 
+                    
                     aboutCard.style.bottom = "10%";
                     aboutCard.style.transform = `translateY(${yOffset}%) scale(${0.95 + (0.05 * revealProgress)})`;
                     aboutCard.style.opacity = revealProgress; 
-                    document.querySelector('.team-cluster').style.opacity = Math.max(0.1, 1 - revealProgress);
+                    teamCluster.style.opacity = Math.max(0.1, 1 - revealProgress);
+
+                } else if (progress > 0.65) {
+                    // Exit phase for About Card (Moves UP and fades out)
+                    let exitProgress = Math.min((progress - 0.65) / 0.1, 1);
+                    const yMoveUp = exitProgress * -150; 
+                    aboutCard.style.transform = `translateY(${yMoveUp}%) scale(1)`;
+                    aboutCard.style.opacity = 1 - exitProgress;
+                    aboutCard.style.bottom = "10%"; 
                 } else {
                     aboutCard.style.transform = `translateY(100%) scale(0.95)`;
                     aboutCard.style.opacity = 0;
-                    document.querySelector('.team-cluster').style.opacity = 1;
-                    scrollHint.style.opacity = 0.6;
+                    teamCluster.style.opacity = 1;
+                }
+
+                // PHASE 3: Advisor Card Logic (Enters at 65%, Stays till end)
+                if (progress > 0.65) {
+                    let advReveal = Math.min((progress - 0.65) / 0.15, 1); 
+                    const advYOffset = (1 - advReveal) * 100;
+
+                    advisorCard.style.bottom = "10%";
+                    advisorCard.style.transform = `translateY(${advYOffset}%) scale(${0.95 + (0.05 * advReveal)})`;
+                    advisorCard.style.opacity = advReveal;
+                } else {
+                    advisorCard.style.transform = `translateY(100%) scale(0.95)`;
+                    advisorCard.style.opacity = 0;
                 }
             }
             window.addEventListener('scroll', updateAnimation);
